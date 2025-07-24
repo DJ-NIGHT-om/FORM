@@ -1,0 +1,122 @@
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="منسق الحفلات">
+    <meta name="theme-color" content="#4a90e2">
+    <meta name="description" content="أنشئ قوائم التشغيل والمناسبات الخاصة بك بكل سهولة">
+    <meta name="keywords" content="حفلات, منسق, أغاني, زفاف, مناسبات">
+    <meta name="author" content="منسق الحفلات">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9IndoaXRlIiBmaWxsPSJub25lIiB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9IndoaXRlIj4KPHA+PHBhdGggZD0iTTI1NiA4QzExOSA4IDggMTE5IDggMjU2czExMSAyNDggMjQ4IDI0OCAyNDgtMTExIDI0OC0yNDhTMzkzIDggMjU2IDh6bTAgNDQ4Yy0xMTAuNSAwLTIwMC04OS41LTIwMC0yMDBTMTQ1LjUgNTYgMjU2IDU2czIwMCA4OS41IDIwMCAyMDAtODkuNSAyMDAtMjAwIDIwMHoiLz48L3N2Zz4KPC9zdmc+">
+    <title>منسق الحفلات</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Browser Compatibility Polyfills -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=fetch,Promise,Object.assign,Array.from"></script>
+    <script>
+        // IE11 Support
+        if (!Element.prototype.closest) {
+            Element.prototype.closest = function(s) {
+                var el = this;
+                do {
+                    if (el.matches(s)) return el;
+                    el = el.parentElement || el.parentNode;
+                } while (el !== null && el.nodeType === 1);
+                return null;
+            };
+        }
+        if (!Element.prototype.matches) {
+            Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
+        }
+    </script>
+</head>
+<body>
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <p>جاري التحميل...</p>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-magic-wand-sparkles"></i> منسق الحفلات</h1>
+            <p>أنشئ قوائم التشغيل والمناسبات الخاصة بك بكل سهولة</p>
+        </header>
+
+        <div class="actions-container">
+            <a href="user.html" id="show-archive-btn" class="submit-btn"><i class="fas fa-archive"></i> الأرشيف</a>
+            <button id="show-form-btn" class="submit-btn green-btn"><i class="fas fa-plus-circle"></i> إنشاء قاعدة بيانات جديدة</button>
+        </div>
+
+        <main>
+            <div id="form-section" class="form-container card hidden">
+                <h2 id="form-title"><i class="fas fa-plus-circle"></i> إضافة قائمة جديدة</h2>
+                <form id="playlist-form">
+                    <input type="hidden" id="playlistId">
+                    <div class="form-group">
+                        <label for="eventDate"><i class="fas fa-calendar-alt icon"></i> تاريخ المناسبة</label>
+                        <input type="date" id="eventDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventLocation"><i class="fas fa-map-marker-alt icon"></i> مكان الحفل</label>
+                        <input type="text" id="eventLocation" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="brideZaffa"><i class="fas fa-female icon"></i> اسم زفة العروس</label>
+                        <input type="text" id="brideZaffa" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="groomZaffa"><i class="fas fa-male icon"></i> اسم زفة المعرس</label>
+                        <input type="text" id="groomZaffa" required>
+                    </div>
+                    
+                    <div class="songs-section">
+                        <h3><i class="fas fa-music icon"></i> قائمة الأغاني</h3>
+                        <div id="songs-container">
+                            <!-- Song input fields will be added here dynamically -->
+                        </div>
+                        <button type="button" id="add-song-btn" class="add-song-btn"><i class="fas fa-plus"></i> إضافة أغنية</button>
+                    </div>
+                    
+                    <div class="form-buttons">
+                        <button type="submit" id="save-btn" class="submit-btn">حفظ البيانات</button>
+                        <button type="button" id="cancel-btn" class="cancel-btn">إلغاء</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="list-container">
+                <h2><i class="fas fa-list-ul"></i> القوائم المحفوظة</h2>
+                <div id="playlist-section">
+                    <!-- Playlist cards will be dynamically inserted here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="custom-modal-overlay" class="modal-overlay hidden">
+        <div class="modal-content card">
+            <h3 id="modal-title"></h3>
+            <p id="modal-message"></p>
+            <div id="modal-actions" class="modal-buttons">
+                <!-- Buttons are injected here by JS -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>تم التصميم والتطوير لإدارة حفلاتك بكفاءة</p>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="modal.js"></script>
+    <script src="api.js"></script>
+    <script src="ui.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
