@@ -1,7 +1,7 @@
 // --- تعليمات هامة جدا ---
 // 1. اذهب إلى https://sheets.new لإنشاء جدول بيانات جوجل جديد.
 // 2. في الصف الأول، قم بإنشاء العناوين التالية بالترتيب الدقيق:
-//    id, date, location, phoneNumber, brideZaffa, groomZaffa, songs, notes, username, password
+//    id, date, location, brideZaffa, groomZaffa, songs
 // 3. اذهب إلى "الإضافات" (Extensions) -> "برمجة تطبيقات" (Apps Script).
 // 4. احذف أي كود موجود والصق الكود الموجود في الأسفل (من قسم GOOGLE_APPS_SCRIPT_CODE).
 // 5. انقر على "نشر" (Deploy) -> "نشر جديد" (New deployment).
@@ -13,7 +13,7 @@
 
 // ---!!! هام: الرجاء لصق رابط تطبيق الويب الخاص بك هنا !!!---
 // ---!!! IMPORTANT: PASTE YOUR WEB APP URL HERE !!!---
-var GAS_URL_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzSbqInOpNAKl-AB3qBbAVqlgENa23M9kRrM28DdzvrWizE5aj9OpMKW-1Xfwdfd6uZfw/exec';
+var GAS_URL_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwombVb4M2q85hKC6pIvBzQRxlIikLU0ics7_tE77hBLCLwzEVpDtvfKci6NrWJN2JZ2w/exec';
 // ---!!! لا تقم بإزالة هذا السطر، فقط استبدل النص الموجود بين علامتي الاقتباس !!!---
 // ---!!! DO NOT REMOVE THIS LINE, ONLY REPLACE THE TEXT BETWEEN THE QUOTES !!!---
 
@@ -49,65 +49,7 @@ function doPost(e) {
     const data = JSON.parse(e.postData.contents);
     const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
 
-    if (data.action === 'authenticate') {
-      const username = data.username;
-      const password = data.password;
-      const dataRange = sheet.getDataRange().getValues();
-      
-      for (let i = 1; i < dataRange.length; i++) {
-        const row = dataRange[i];
-        const rowUsername = row[headers.indexOf('username')];
-        const rowPassword = row[headers.indexOf('password')];
-        
-        if (rowUsername === username && rowPassword === password) {
-          return ContentService.createTextOutput(JSON.stringify({status: 'success', message: 'Login successful'})).setMimeType(ContentService.MimeType.JSON);
-        }
-      }
-      
-      return ContentService.createTextOutput(JSON.stringify({status: 'error', message: 'Invalid credentials'})).setMimeType(ContentService.MimeType.JSON);
-      
-    } else if (data.action === 'register') {
-      const username = data.username;
-      const password = data.password;
-      const dataRange = sheet.getDataRange().getValues();
-      
-      // Check if username already exists
-      for (let i = 1; i < dataRange.length; i++) {
-        const row = dataRange[i];
-        const rowUsername = row[headers.indexOf('username')];
-        
-        if (rowUsername === username) {
-          return ContentService.createTextOutput(JSON.stringify({status: 'error', message: 'اسم المستخدم موجود بالفعل'})).setMimeType(ContentService.MimeType.JSON);
-        }
-      }
-      
-      // Create new user entry
-      const newRow = new Array(headers.length).fill('');
-      newRow[headers.indexOf('username')] = username;
-      newRow[headers.indexOf('password')] = password;
-      newRow[headers.indexOf('id')] = 'user_' + new Date().getTime();
-      
-      sheet.appendRow(newRow);
-      return ContentService.createTextOutput(JSON.stringify({status: 'success', message: 'User registered successfully'})).setMimeType(ContentService.MimeType.JSON);
-      
-    } else if (data.action === 'resetPassword') {
-      const username = data.username;
-      const newPassword = data.password;
-      const dataRange = sheet.getDataRange().getValues();
-      
-      for (let i = 1; i < dataRange.length; i++) {
-        const row = dataRange[i];
-        const rowUsername = row[headers.indexOf('username')];
-        
-        if (rowUsername === username) {
-          sheet.getRange(i + 1, headers.indexOf('password') + 1).setValue(newPassword);
-          return ContentService.createTextOutput(JSON.stringify({status: 'success', message: 'Password reset successful'})).setMimeType(ContentService.MimeType.JSON);
-        }
-      }
-      
-      return ContentService.createTextOutput(JSON.stringify({status: 'error', message: 'اسم المستخدم غير موجود'})).setMimeType(ContentService.MimeType.JSON);
-
-    } else if (data.action === 'delete') {
+    if (data.action === 'delete') {
         const idToDelete = data.id;
         const idColumn = sheet.getRange("A:A").getValues();
         for (let i = idColumn.length - 1; i >= 1; i--) { // Iterate backwards to avoid index shifts
@@ -140,13 +82,9 @@ function doPost(e) {
             id: data.id || new Date().getTime().toString(),
             date: data.date,
             location: data.location,
-            phoneNumber: data.phoneNumber,
             brideZaffa: data.brideZaffa,
             groomZaffa: data.groomZaffa,
-            songs: JSON.stringify(data.songs || []),
-            notes: data.notes || '',
-            username: data.username || '',
-            password: data.password || ''
+            songs: JSON.stringify(data.songs || [])
         };
 
         const rowAsArray = headers.map(header => rowData[header]);
